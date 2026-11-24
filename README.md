@@ -11,6 +11,9 @@ test --all                 # every package's tests
 test --verbose utils/      # full report, one level
 ```
 
+`gdtest` is the same command under a name that shell builtins don't shadow (the MCP sandbox shell's
+own `test` hides this one).
+
 A relative path whose first segment isn't a dir in the cwd names a package: a folder under `res://addons`
 with a plugin/package/addon/version cfg. The exit code is 0 when every suite passes, 1 when one fails, and
 2 for a bad target (or with `--report-invalid`, a `*_test.gd` without an entry func).
