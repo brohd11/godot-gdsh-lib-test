@@ -11,6 +11,11 @@ test --all                 # every package's tests
 test --verbose utils/      # full report, one level
 ```
 
+GUT and GdUnit4 suites in the target run too, through each framework's own CLI in a headless Godot
+(one process per framework, the files passed explicitly), so `./...` and package targets cover them.
+They're found by their `extends` chain, custom test bases included, and reported per file from the
+framework's JUnit XML. A missing framework fails its suites rather than skipping them.
+
 `gdtest` is the same command under a name that shell builtins don't shadow (the MCP sandbox shell's
 own `test` hides this one).
 

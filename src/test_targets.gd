@@ -1,9 +1,11 @@
 extends RefCounted
-## Finds and runs `*_test.gd` suites for the `test` command: package discovery, target
-## resolution (a cwd dir, else a package name mapped to its export-ignore test dir) and file
-## collection. Static and editor-free, so the gdsh CLI and Editor Console share it.
+## Finds and runs suites (native `*_test.gd`, GUT, GdUnit4) for the `test` command: package
+## discovery, target resolution (a cwd dir, else a package name mapped to its export-ignore test
+## dir) and file collection. Static and editor-free, so the gdsh CLI and Editor Console share it.
 
 const TestRunner = preload("res://addons/_lib/util_r/src/test/test_runner.gd")
+const TestFrameworks = preload("res://addons/_lib/util_r/src/test/test_frameworks.gd")
+const FrameworkRunner = preload("res://addons/_lib/gdsh_lib/test/src/framework_runner.gd")
 const GetFiles = preload("res://addons/_lib/util_r/src/file/get_files.gd")
 const PackageCfg = preload("res://addons/_lib/gdpackage/spec/src/package_cfg.gd")
 const ExportIgnore = preload("res://addons/_lib/gdpackage/spec/src/export_ignore.gd")
@@ -91,7 +93,24 @@ static func resolve(cwd:String, arg:String, found:Dictionary) -> Dictionary:
 	return {"dir": dir, "recursive": recursive}
 
 
-## The .gd files in `dir` (all levels when recursive); TestRunner skips non-suites.
+## Coroutine. Native suites run in process; GUT / GdUnit4 ones through FrameworkRunner. Returns
+## TestRunner's report shape, framework suites tagged with `framework`.
+static func run_files(files:Array) -> Dictionary:
+	var classifier = TestFrameworks.new()
+	classifier.index_classes(files)
+	classifier.index_global_classes()
+	var split = classifier.split(files)
+	var report = await TestRunner.run_files(split[TestFrameworks.NATIVE])
+	for kind in [TestFrameworks.GUT, TestFrameworks.GDUNIT4]:
+		var part = await FrameworkRunner.run(kind, split[kind])
+		for suite in part.suites:
+			suite.framework = kind
+		report.suites.append_array(part.suites)
+		report.failed += part.failed
+	return report
+
+
+## The .gd files in `dir` (all levels when recursive); run_files skips non-suites.
 static func collect(dir:String, recursive:bool) -> Array:
 	if recursive:
 		return Array(GetFiles.scan(dir, ["gd"]))

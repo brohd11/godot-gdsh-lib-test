@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="GutTests" failures="1" tests="5" >
+  <testsuite name="addons/gdpackage_ci_test/src/test_labels.gd" tests="5" failures="1" skipped="0" time="0.002105" >
+      <testcase name="test_util_r" assertions="1" status="pass" classname="addons/gdpackage_ci_test/src/test_labels.gd" time="0.000078" >
+      </testcase>
+      <testcase name="test_sugar" assertions="2" status="pass" classname="addons/gdpackage_ci_test/src/test_labels.gd" time="0.000026" >
+      </testcase>
+      <testcase name="test_sweet_ui" assertions="1" status="pass" classname="addons/gdpackage_ci_test/src/test_labels.gd" time="0.000072" >
+      </testcase>
+      <testcase name="test_async" assertions="1" status="pass" classname="addons/gdpackage_ci_test/src/test_labels.gd" time="0.001842" >
+      </testcase>
+      <testcase name="test_failure_switch" assertions="1" status="fail" classname="addons/gdpackage_ci_test/src/test_labels.gd" time="0.000087" >
+      <failure message="failed"><![CDATA[["gut"] expected to not equal ["gut"]:  INTENTIONAL_GUT_FAILURE
+            at line 30]]></failure></testcase>
+  </testsuite>
+</testsuites>

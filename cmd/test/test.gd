@@ -5,6 +5,7 @@ const TestTargets = preload("res://addons/_lib/gdsh_lib/test/src/test_targets.gd
 const _HELP = \
 "Run the *_test.gd suites in a directory. '...' indicates recursive. A relative path whose first
 segment isn't a dir in the cwd names a package, resolved to its _export_ignore/test/ (or export_ignore/test/).
+GUT and GdUnit4 suites found there run through their own CLI in a headless Godot.
 Usage: test [--verbose] [--report-invalid] [--all] [optional: package[/subdir][/...]]"
 
 var verbose_flag := false
@@ -62,9 +63,10 @@ func _execute(ctx:Context):
 
 
 func _run_files(ctx:Context, files:Array, label:String) -> int:
-	var report = await TestTargets.TestRunner.run_files(files)
+	var report = await TestTargets.run_files(files)
 	for suite in report.suites:
-		ctx.append_output("Test: [%s] : %s" % ["PASS" if suite.passed else "FAIL", suite.path])
+		var tag = " (%s)" % suite.framework if suite.has("framework") else ""
+		ctx.append_output("Test: [%s] : %s%s" % ["PASS" if suite.passed else "FAIL", suite.path, tag])
 		if verbose_flag:
 			for line in suite.output:
 				ctx.append_output("\t" + str(line))
