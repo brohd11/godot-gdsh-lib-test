@@ -16,7 +16,7 @@ GUT and GdUnit4 suites in the target run too, through each framework's own CLI i
 They're found by their `extends` chain, custom test bases included, and reported per file from the
 framework's JUnit XML. A missing framework fails its suites rather than skipping them.
 
-`gdtest` is the same command under a name that shell builtins don't shadow (the MCP sandbox shell's
+`gdtest` is an alias of the command, a name that shell builtins don't shadow (the MCP sandbox shell's
 own `test` hides this one).
 
 A relative path whose first segment isn't a dir in the cwd names a package: a folder under `res://addons`
